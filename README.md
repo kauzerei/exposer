@@ -1,5 +1,7 @@
 # exposer
 Exposure timer for PCB production, screen printing or other analog printing techniques. Quickly knocked together using parts I had laying around.
+![pcb side](img/pic1.jpg)
+![led side](img/pic2.jpg)
 
 ## Parts list
 - Arduino Nano
@@ -47,6 +49,8 @@ Time is displayed in seconds or as denominator in 1/x fraction of a second.
 The middle button starts the exposure.
 
 During the exposure rounded amount of seconds left is dispayed.
+
+![exposer shines light on some pcb. this picture makes no sense, to be replaced](img/pic3.jpg)
 
 ## Known issues
 If you connect too much LED strip, i.e. draw too much current, the voltage on the boost converter drops too much. This can lead to LEDs working inefficiently or to reboots of the arduino. The device is intended for about 10W of load.

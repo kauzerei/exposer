@@ -1,3 +1,20 @@
+# Time relay for exposure unit.
+#
+# Copyright (c) 2024 Kauzerei
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <https://www.gnu.org/licenses/>.
+
 #include <TM1637Display.h> //https://github.com/avishorp/TM1637
 
 const char led_out=7;
@@ -15,12 +32,12 @@ unsigned long time;
 TM1637Display display(display_clk, display_dio);
 
 void setup() {
-pinMode(led_out,OUTPUT);
-pinMode(button_up,INPUT_PULLUP);
-pinMode(button_down,INPUT_PULLUP);
-pinMode(button_mid,INPUT_PULLUP);
-digitalWrite(led_out,LOW);
-display.setBrightness(0x0f);
+  pinMode(led_out,OUTPUT);
+  pinMode(button_up,INPUT_PULLUP);
+  pinMode(button_down,INPUT_PULLUP);
+  pinMode(button_mid,INPUT_PULLUP);
+  digitalWrite(led_out,LOW);
+  display.setBrightness(0x0f);
 }
 
 void showtime(byte ei) {
@@ -38,8 +55,7 @@ void loop() {
     digitalWrite(led_out,HIGH);
     while (millis()-time<pow(2,ei-10)*1000)
     display.showNumberDec((millis()-time)/1000-pow(2,ei-10));
-
-//    delay(pow(2,ei-10)*1000);
     digitalWrite(led_out,LOW);
+    delay(500); //implement this better someday maybe
   }
 }
