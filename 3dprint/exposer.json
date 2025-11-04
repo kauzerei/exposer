@@ -1,0 +1,18 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "New set 1": {
+            "$fn": "64",
+            "angle": "10",
+            "hole": "3",
+            "led_depth": "1.2",
+            "led_dist": "16.5",
+            "led_length": "51",
+            "led_strips": "4",
+            "led_width": "10.5",
+            "part": "bottom",
+            "thickness": "8",
+            "wall": "1.2"
+        }
+    }
+}
