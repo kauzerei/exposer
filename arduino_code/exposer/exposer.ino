@@ -22,6 +22,7 @@ const char encoder_b=5;
 const char encoder_a=4;
 const char display_clk=2;
 const char display_dio=3;
+unsigned long debounce=0;
 byte ei=10;
 double sec=1;
 uint8_t data[] = { 0xff, 0xff, 0xff, 0xff };
@@ -31,9 +32,13 @@ unsigned long time;
 TM1637Display display(display_clk, display_dio);
 
 ISR (PCINT2_vect){ // PCINT2_vect: interrupt vector for PORTD
-  if (digitalRead(encoder_a)&&digitalRead(encoder_b)) ei=ei-1;
-  if (digitalRead(encoder_a)&&!digitalRead(encoder_b)) ei=ei+1;
-  delay(10);
+  //if (digitalRead(encoder_a)&&digitalRead(encoder_b)) ei=ei-1;
+  //if (digitalRead(encoder_a)&&!digitalRead(encoder_b)) ei=ei+1;
+  if (millis()>debounce && (PIND&(1<<4))) {
+    if ((PIND&(1<<5))) ei--;
+    else ei++;
+    debounce=millis()+20;
+  }
 }
 
 void setup() {
@@ -44,7 +49,7 @@ void setup() {
   digitalWrite(led_out,LOW);
   display.setBrightness(0x0f);
   PCICR = (1<<PCIE2);    // enable PCINT[23:16] interrupts
-  PCMSK2 = (1<<PCINT20); // D4 = PCINT22
+  PCMSK2 = (1<<PCINT20); // D4 = PCINT20
 }
 
 void showtime(byte ei) {
@@ -53,16 +58,8 @@ void showtime(byte ei) {
   else display.showNumberDecEx(2<<(9-ei),0b11100000);
   }
 
-void encoder() {
-  if (digitalRead(encoder_b)) ei=ei+1;
-  else ei=ei-1;
-  delay(20);
-}
-
 void loop() {
   showtime(ei);
-//  if (digitalRead(button_up)==LOW) {ei=ei+1; delay(100);}
-//  if (digitalRead(button_down)==LOW) {ei=ei-1; delay(100);}
   if (digitalRead(button)==LOW) {
     time=millis();
     digitalWrite(led_out,HIGH);
