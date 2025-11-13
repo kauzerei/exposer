@@ -1,58 +1,67 @@
-# exposer
-Exposure timer for PCB production, screen printing or other analog printing techniques. Quickly knocked together using parts I had laying around.
+# Tiny footprint fabrication set
+
+This repo contains a set of devices for DIY PCB production.
+They are optiized for a very small workspace and component availability.
+Making them bigger is also possible: the models are written in OpenSCAD and are parametric.
+I tried to use the simplest, easiest to use and widely available components as possible.
+Arduino Nano are used for control, PCBs are single layer and designed to be DIY-friendly.
+
+## Exposer
+
+Exposure timer for PCB production. 
+Can be also used for screen printing or other analog printing techniques.
+Quickly knocked together using parts I had laying around.
+
+Pictures are of a previous generation.
+
 ![pcb side](img/pic1.jpg)
+
 ![led side](img/pic2.jpg)
 
-## Parts list
+### Parts list
+
 - Arduino Nano
-- ULN2065B or similar darlington transistor array
+- ULN2003 or similar darlington transistor array
 - TM1637 4 Digit 7-Segment LED
-- MT3608 boost module
-- 11.5x5mm P3.0 SPDT switch
-- 3x 6mm buttons
 - 18650 cell with leads or 18650 holder
 - UV LED stripe
+- TODO: update to the current version
 
-## Dependency
+### Dependency
+
 TM1637Display library is used for driving seven-segment display.
+It's the one that comes with Arduino IDE.
 
 https://github.com/avishorp/TM1637
 
-## PCB
-The board is one-sided to allow easy fabrication at home. Neagtive artwork is in PDF format. If you want to modify something like footprints of parts, the schematic and PCB layout are in KiCAD8 format. 
+### PCB
 
-## Assembly
+The board is one-sided to allow easy fabrication at home.
+KiCad project is in ```exposer_pcb```.
+Neagtive artwork is in PDF format, but it's better to open the KiCad project for soldering.
+
+### Assembly
+
+3d-print every model once, except the legs, you need four of them.
+Put the LED-strips into holding pockets, solder them together and to longer power-in cable.  
+Fix the legs with 4mm screws or however you like.
 Assemble the PCB.
+Don't forget to set the correct voltage on boost converter.
+Connect the LEDs to the board and you are ready to go.
 
-Tune the boost converter to LED stripe voltage.
+### Customizing
 
-Glue UV LED stripes on one side of plywood or something.
+You can change the 3d-model even if you don't really know OpenSCAD language.
+OpenSCAD has customizer module, in which you can graphically change the parameters.
+You can use longer LED strips or more of them.
 
-Glue the PCB on the other side, or use more civilized way of fixing it.
+### Usage
 
-Wire the LEDs to the board. Test that everything works.
-
-## Foldable legs
-I designed this thing to be as compact and flat as possible, that's why I went with foldable legs instead of enclosure.
-
-The design is parametric, which means, that using OpenSCAD's customizer, you can define length, thickness and angle of the legs.
-
-Print 4 instances of each of the two STL files. Assemble each leg with a screw and a nut, or any other way like a piece of wire bent on both sides, who am I to judge. Mind the correct relative orientation of parts.
-
-Glue or screw on the legs to the LED side of the plywood board. Now it can stand on its own above whatever you need to be exposed to UV light.
-
-## Usage
-Up and down buttons increase and decrease the exposure time.
-
-Time is displayed in seconds or as denominator in 1/x fraction of a second.
-
-The middle button starts the exposure.
-
-During the exposure rounded amount of seconds left is dispayed.
+Rotating the encoder changes exposure in relative EV units.
+Display shows time in seconds, or denominator of a fraction of a second.
+It ```:``` symbol is present on display, it's fraction, if not - whole seconds.
+Every step divides or multiplies the exposure time.
+Pressing the encoder starts exposure and shows countdown.
 
 ![exposer shines light on some pcb. this picture makes no sense, to be replaced](img/pic3.jpg)
 
-## Known issues
-If you connect too much LED strip, i.e. draw too much current, the voltage on the boost converter drops too much. This can lead to LEDs working inefficiently or to reboots of the arduino. The device is intended for about 10W of load.
-
-If when using short exposures you don't release the button fast enough, it triggers consequent exposure. I added fractions of seconds just in case and never use them, that's why they are programmed ugly and stay that way.
