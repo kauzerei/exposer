@@ -1,5 +1,5 @@
-include <../import/BOSL2/std.scad>
-include <../import/BOSL2/gears.scad>
+include <BOSL2/std.scad>
+include <BOSL2/gears.scad>
 part="NOSTL_all";//[NOSTL_all,top,top_mech,bottom,servo_gear,enclosure]
 $fa=1/2;
 $fs=1/2;
@@ -7,10 +7,11 @@ bsl=1/100;
 base_width=140;
 base_depth=88;
 base_thickness=4;
-base_rounding=0;
+base_rounding=1;
 bath_width=161;
 bath_depth=106;
-bath_lip=4;
+bath_thickness=3;
+bath_lip=6;
 bath_rounding=0;//15;
 bath_chamfer=15;
 height=20;
@@ -93,16 +94,16 @@ module servo_mount() {
 }
 
 module top() {
-  top_profile=bath_lip*[[0,0],[1,0],[1,-1],[-1,-1],[-1,1],[0,1]];
+  top_profile=bath_thickness*[[0,0],[1,0],[1,-1],[-1,-1],[-1,bath_lip/bath_thickness],[0,bath_lip/bath_thickness]];
   path=rect([bath_width,bath_depth],chamfer=bath_chamfer,rounding=bath_rounding);
   path_extrude2d(path,closed=true) polygon(top_profile);
   difference() {
     union() {
-      cube([bath_width,thickness,bath_lip],anchor=TOP);
-      cube([thickness,bath_depth,bath_lip],anchor=TOP);
+      cube([bath_width,thickness,bath_thickness],anchor=TOP);
+      cube([thickness,bath_depth,bath_thickness],anchor=TOP);
     }
     for (tr=(cylr-screw_d/2-wall)*[[1,0,0],[0,1,0],[-1,0,0],[0,-1,0]]) translate(tr) { //screw holes
-      up(bsl)cylinder(d=screw_d,h=bath_lip+2*bsl,anchor=TOP);
+      up(bsl)cylinder(d=screw_d,h=bath_thickness+2*bsl,anchor=TOP);
     }
   }  
 }    
@@ -151,7 +152,10 @@ module enclosure(){
     }
   }
   down(enclosure_wall)linear_extrude(height=enclosure_wall) { //floor
-    polygon(offset(r,r=enclosure_gap+enclosure_wall));
+    difference() {
+      polygon(offset(r,r=enclosure_gap+enclosure_wall));
+      polygon(offset(r,r=-3));
+    }
   }
 }
 //render() 
@@ -161,7 +165,7 @@ if (part=="NOSTL_all")
   {
   down(height) bottom();
   yrot(global_rotation) {
-    up(bath_lip+eyelet_d/2+wall+1) top();
+    up(bath_thickness+eyelet_d/2+wall+1) top();
     top_mechanics();
   }
   yrot(90/gear_ratio)right(dist)yrot(-global_rotation*gear_ratio)yrot(180/servo_gear)xrot(90)servo_gear();
