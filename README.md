@@ -20,12 +20,15 @@ Pictures are of a previous generation.
 
 ### Parts list
 
+TODO: write down particular parts used
+
 - Arduino Nano
 - ULN2003 or similar darlington transistor array
 - TM1637 4 Digit 7-Segment LED
 - 18650 cell with leads or 18650 holder
-- UV LED stripe
-- TODO: update to the current version
+- Encoder with button
+- Switch
+- UV LED strip
 
 ### Dependency
 
@@ -65,3 +68,35 @@ Pressing the encoder starts exposure and shows countdown.
 
 ![exposer shines light on some pcb. this picture makes no sense, to be replaced](img/pic3.jpg)
 
+## Rocker
+
+Rocks/agitates a rectangular container.
+Made for etching PCBs but can be used for any chemical processes.
+The size and shape of the container is customizeable: measure yours for ideal fit.
+
+### Parts list
+
+TODO: write down particular parts used
+
+- Arduino Nano
+- 2 linear Potentiometers, about 25k or more
+- DC-DC converter
+- 18650 holder
+- Pin headers
+- Switch
+- Servo
+- 3d-printed parts
+
+### Assembly
+
+Assemble the PCB.
+KiCad project is in ```agitator_pcb```.
+Don't forget to set the voltage of DC-DC converter to 5v.
+Customize the mechanical parts and print them.
+Screw them together with the servo and the PCB.
+
+### Usage
+
+One pot changes the oscillation frequency, the other controls amplitude.
+High amplitudes are not achievable with high frequencies.
+If the servo does not have time to rotate the necessa
