@@ -1,0 +1,38 @@
+{
+    "fileFormatVersion": "1",
+    "parameterSets": {
+        "New set 1": {
+            "base_depth": "88",
+            "base_rounding": "1",
+            "base_thickness": "4",
+            "base_width": "140",
+            "bath_chamfer": "18",
+            "bath_depth": "106.5",
+            "bath_lip": "6",
+            "bath_rounding": "0",
+            "bath_thickness": "3",
+            "bath_width": "161.5",
+            "enclosure_gap": "0.5",
+            "enclosure_h": "25",
+            "enclosure_wall": "1.2",
+            "eyelet_d": "4",
+            "eyelet_gap": "0.5",
+            "eyelet_w": "16",
+            "gear_gap": "0",
+            "gear_pitch": "4",
+            "gear_ratio": "10",
+            "gear_thickness": "10",
+            "height": "20",
+            "hole_d": "7",
+            "horn_screw": "4",
+            "horn_thickness": "1.6000000000000001",
+            "mech_thickness": "4",
+            "part": "top_mech",
+            "screw_d": "3",
+            "servo_ax": "4",
+            "servo_d": "5",
+            "servo_gear": "6",
+            "wall": "2"
+        }
+    }
+}

@@ -8,12 +8,12 @@ base_width=140;
 base_depth=88;
 base_thickness=4;
 base_rounding=1;
-bath_width=161;
-bath_depth=106;
+bath_width=161.5;
+bath_depth=106.5;
 bath_thickness=3;
 bath_lip=6;
 bath_rounding=0;//15;
-bath_chamfer=15;
+bath_chamfer=18;
 height=20;
 eyelet_d=4;
 eyelet_w=16;
@@ -29,6 +29,8 @@ gear_thickness=10;
 mech_thickness=4;
 servo_d=5;
 servo_ax=4;
+horn_screw=4;
+horn_thickness=1.6;
 screw_d=3;
 enclosure_h=25;
 holes=[[41,17],[71,17],[11,17]];
@@ -50,6 +52,7 @@ module servo_gear() {
     }
     up(gear_thickness/2) cylinder(d=servo_d,h=servo_ax+bsl);
     down(gear_thickness/2+bsl) cylinder(d=2.5,h=gear_thickness+2*bsl);
+    up(gear_thickness/2-horn_thickness) cylinder(d=horn_screw,h=gear_thickness,anchor=TOP);
   }
 }
 
@@ -58,11 +61,10 @@ module top_mechanics() {
   cyld=2*root_radius(mod=gear_pitch/PI,teeth=servo_gear*gear_ratio)-2*mech_thickness;
   yflip_copy() difference() { //eyelets
     back(base_depth/2-base_thickness-eyelet_gap-mech_thickness/2)
-    //back(base_thickness/2)
     difference() {
       union() {
         ycyl(d=eyelet_d+2*wall,h=mech_thickness);
-        up(eyelet_d/4+wall/2) cube([eyelet_d+2*wall,mech_thickness,eyelet_d/2+wall],center=true);
+        cube([eyelet_d+2*wall,mech_thickness,eyelet_d/2+wall],anchor=BOTTOM);
       }
       ycyl(d=eyelet_d,h=mech_thickness+bsl);
       back(-base_depth/2-eyelet_gap-depth/2+bath_depth/2) right(screw_offset) down(bsl){
@@ -70,12 +72,12 @@ module top_mechanics() {
       }
     }  
   }
-  down(mech_thickness-wall-eyelet_d/2)difference() {
+  up(eyelet_d/2)
+  difference() {
     union() { //bars
-      //left(bath_width/2+bath_lip)cube([bath_width/2+bath_lip+cylr,thickness,mech_thickness],anchor=LEFT+BOTTOM);
       cube([2*cylr,thickness,mech_thickness],anchor=CENTER+BOTTOM);
-//      cube([thickness,2*cylr,mech_thickness],anchor=CENTER+BOTTOM);
-      cube([thickness,base_depth-2*base_thickness-2*eyelet_gap-2*mech_thickness,mech_thickness],anchor=CENTER+BOTTOM);
+      cube([cylr,thickness,eyelet_d/2],anchor=LEFT+TOP);
+      cube([thickness,base_depth-2*base_thickness-2*eyelet_gap,mech_thickness],anchor=CENTER+BOTTOM);
     }
     for (tr=(cylr-screw_d/2-wall)*[[1,0,0],[0,1,0],[-1,0,0],[0,-1,0]]) translate(tr) { //screw holes
       down(bsl)cylinder(d=screw_d,h=mech_thickness+2*bsl);
@@ -106,11 +108,7 @@ module top() {
       up(bsl)cylinder(d=screw_d,h=bath_thickness+2*bsl,anchor=TOP);
     }
   }  
-}    
-//    for (m=[[0,0,0],[0,1,0]]) mirror(m) {
-//      right(screw_offset) back(bath_depth/2) down(bath_lip+bsl) cylinder(d=screw_d,h=bath_lip);
-//    }
-//    left(bath_width/2)down(bath_lip+bsl)cylinder(d=screw_d,h=bath_lip);
+}
 
 module bottom() {
   linear_extrude(height=base_thickness) difference() { //base
@@ -131,6 +129,7 @@ module bottom() {
     up(height) translate(servo_position) yrot(max_rotation) servo_mount();
   }
 }
+
 module enclosure(){
   r=rect([base_width,base_depth],rounding=base_rounding);
   difference() {
@@ -158,18 +157,14 @@ module enclosure(){
     }
   }
 }
-//render() 
 {
-if (part=="NOSTL_all") 
-//render() 
-  {
+if (part=="NOSTL_all") {
   down(height) bottom();
   yrot(global_rotation) {
-    up(bath_thickness+eyelet_d/2+wall+1) top();
+    up(bath_thickness+mech_thickness+eyelet_d/2+1) top();
     top_mechanics();
   }
   yrot(90/gear_ratio)right(dist)yrot(-global_rotation*gear_ratio)yrot(180/servo_gear)xrot(90)servo_gear();
-  //yrot(90/gear_ratio)right(dist)yrot(180/servo_gear)xrot(90)servo_gear();
   down(height+enclosure_h+base_thickness) enclosure();
 }
 if (part=="top") top();
