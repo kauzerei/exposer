@@ -29,7 +29,7 @@ N=$(nproc --all)
 
 mkdir -p stl
 
-if [ -z "$( ls -A $(git rev-parse --show-toplevel)/import/BOSL2 )" ]; then 
+if [ -z "$( ls -A $(git rev-parse --show-toplevel)/3dprint/BOSL2 )" ]; then 
 echo "BOSL2 not found" && git submodule update --init
 fi
 
