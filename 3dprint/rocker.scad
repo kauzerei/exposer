@@ -32,6 +32,7 @@ servo_ax=4;
 horn_screw=4;
 horn_thickness=1.6;
 screw_d=3;
+servo_mount_thickness=8;
 enclosure_h=25;
 holes=[[41,17],[71,17],[11,17]];
 hole_d=7;
@@ -88,10 +89,10 @@ module top_mechanics() {
 
 module servo_mount() {
   fwd(servo_ax) right(5.45) difference() {
-    up(12.5/2)cube([34,8,100],anchor=TOP+BACK);
-    back(bsl)cube([23.5,8+2*bsl,12.5+bsl],anchor=CENTER+BACK);
-    back(bsl)right(14)ycyl(d=3,h=8+2*bsl,anchor=BACK);
-    back(bsl)left(14)ycyl(d=3,h=8+2*bsl,anchor=BACK);
+    up(12.5/2)cube([34,servo_mount_thickness,100],anchor=TOP+BACK);
+    back(bsl)cube([23.5,servo_mount_thickness+2*bsl,12.5+bsl],anchor=CENTER+BACK);
+    back(bsl)right(14)ycyl(d=3,h=servo_mount_thickness+2*bsl,anchor=BACK);
+    back(bsl)left(14)ycyl(d=3,h=servo_mount_thickness+2*bsl,anchor=BACK);
   }
 }
 
@@ -123,7 +124,8 @@ module bottom() {
     }
     translate([0,base_depth/2-base_thickness/2,height]) ycyl(d=eyelet_d,h=base_thickness+2*bsl);
   }
-  fwd(gear_thickness/2+servo_ax)cube([base_width,8,base_thickness],anchor=BACK+BOTTOM);
+  fwd(gear_thickness/2+servo_ax)cube([base_width,servo_mount_thickness,base_thickness],anchor=BACK+BOTTOM); //bar along motor
+  right(cylr+gear_pitch/3)cube([base_thickness,base_depth,base_thickness],anchor=BOTTOM+LEFT); //cross bar
   intersection() {
     cube([base_width,base_depth,100],anchor=BOTTOM);
     up(height) translate(servo_position) yrot(max_rotation) servo_mount();
