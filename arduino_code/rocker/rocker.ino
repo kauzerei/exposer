@@ -1,34 +1,32 @@
 #include <Servo.h>
+#include <math.h>
 
-Servo myservo;  // create servo object to control a servo
-// twelve servo objects can be created on most boards
-
-int pos = 0;    // variable to store the servo position
-int divs=200;
-int del=2000;
-int amp;
-int spd;
-int pin1=A4;
-int pin2=A5;
+Servo servo;
+int freq_pin=A4;
+int amp_pin=A5;
+int freq_pot; //frequency pot read value
+int amp_pot; //amplitude pot read value
+float freq; //frequency exact value
+float amp;
+float srv_vals[256];
+char index=0;
+int skip;
+unsigned long switchtime;
 
 void setup() {
-  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+  servo.attach(9);  // attaches the servo on pin 9 to the servo object
+  for (int i=0;i<256;i++) srv_vals[i]=90.0*sin(float(i)*2.0*PI/256.0);
+  switchtime=micros();
 }
 
 void loop() {
-  amp=1024-analogRead(pin1);
-  spd=analogRead(pin2);
-  del=100000.0/(spd+10);
-  divs=del<50?1:del<100?2:del<200?4:del<400?8:del<800?16:del<1600?32:del<3200?64:del<6400?128:del<12800?256:512;
-
-  for(float a=0; a<divs; a+=1) {
-/*  amp=1024-analogRead(pin1);
-  spd=analogRead(pin2);
-  del=100000.0/(spd+10);
-  divs=del<50?1:del<100?2:del<200?4:del<400?8:del<800?16:del<1600?32:del<3200?64:del<6400?128:del<12800?256:512;
-*/
-    myservo.write(90.0+90.0*amp*sin(a*2.0*355.0/113.0/divs)/1024);
-    //myservo.write(90);
-    delay(del/divs);  
-  }
+  freq_pot=analogRead(freq_pin); //can replace with 1024-analogRead to invert the pot direction
+  freq=pow(10.0,(float(freq_pot-512)/512)); //map 0-1023 values to exp frequency scale from 0.1 to 10 hz
+  amp_pot=analogRead(amp_pin); //can replace with 1024-analogRead to invert the pot direction
+  amp=90.0*amp_pot/1024.0;
+  skip=max(0,ceil(8+log(freq/50)/log(2)));
+  index=(index&&(255<<skip))+(1<<skip);
+  switchtime+=1000000.0*pow(2,skip-8)/freq;
+  while(micros()<switchtime);
+  servo.write(90+amp*srv_vals[index]);
 }
